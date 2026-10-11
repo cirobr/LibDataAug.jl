@@ -4,6 +4,7 @@ module LibDataAug
 # libraries
 export ClassCentricCrops, RandomCentricCrops
 
+import DataAugmentation
 import DataAugmentation: apply, getrandstate, itemdata,
     Transform, Image, MaskMulti, Item,
     OneOf, ScaleKeepAspect, Crop
