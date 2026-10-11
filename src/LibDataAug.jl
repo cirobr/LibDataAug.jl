@@ -7,7 +7,7 @@ export ClassCentricCrops, RandomCentricCrops
 import DataAugmentation
 import DataAugmentation: apply, getrandstate, itemdata,
     Transform, Image, MaskMulti, Item,
-    OneOf, ScaleKeepAspect, Crop
+    OneOf, ScaleKeepAspect, Crop, PinOrigin
 import OffsetArrays
 import Colors: RGB, N0f8
 
