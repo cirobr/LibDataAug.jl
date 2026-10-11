@@ -4,7 +4,9 @@ module LibDataAug
 # libraries
 export ClassCentricCrops, RandomCentricCrops
 
-import DataAugmentation: apply, getrandstate, itemdata, OneOf, Transform, Image, MaskMulti, Item
+import DataAugmentation: apply, getrandstate, itemdata,
+    Transform, Image, MaskMulti, Item,
+    OneOf, ScaleKeepAspect
 import OffsetArrays
 import Colors: RGB, N0f8
 
