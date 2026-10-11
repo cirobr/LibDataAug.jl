@@ -2,7 +2,7 @@ module LibDataAug
 
 
 # libraries
-export ClassCentricCrops, RandomCentricCrops
+export ClassCentricCrop, RandomCentricCrop
 
 import DataAugmentation
 import DataAugmentation: apply, getrandstate, itemdata,
