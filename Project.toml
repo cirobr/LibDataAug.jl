@@ -1,0 +1,13 @@
+name = "LibDataAug"
+uuid = "8ce57647-ee5c-43be-a4d7-4c390306d9e9"
+authors = ["Ciro B Rosa <ciro.rosa@alumni.usp.br>"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.13"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
