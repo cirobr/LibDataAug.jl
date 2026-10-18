@@ -11,7 +11,7 @@ function unwrap_pair(img_wrap, mask_wrap; classnrs)
 end
 
 
-function data_augmentation(
+function apply_data_augmentation(
       img::AbstractArray{RGB{N0f8}},
       mask::AbstractArray{Int16};
       intensity_tfm,

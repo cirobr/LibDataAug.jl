@@ -11,4 +11,4 @@ Crop augmentation extensions:
 * RandomCentricCrop
 
 Utility functions:
-* data_augmentation()
+* apply_data_augmentation()
