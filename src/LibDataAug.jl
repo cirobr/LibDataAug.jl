@@ -9,7 +9,7 @@ import DataAugmentation: apply, getrandstate, itemdata,
     Transform, Image, MaskMulti, Item,
     OneOf, ScaleKeepAspect, Crop, PinOrigin
 import OffsetArrays
-import Colors: RGB, N0f8
+import Colors: Color, RGB, N0f8
 
 include("utils.jl")
 include("crops.jl")
