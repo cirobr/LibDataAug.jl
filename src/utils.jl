@@ -12,7 +12,7 @@ end
 
 
 function apply_data_augmentation(
-      img::AbstractArray{RGB{N0f8}},
+      img::AbstractArray{<:Color{N0f8}},
       mask::AbstractArray{Int16};
       intensity_tfm,
       geometric_tfm,
