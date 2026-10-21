@@ -4,7 +4,7 @@
 
 [![Build Status](https://github.com/cirobr/LibDataAug.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/cirobr/LibDataAug.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
-Extension package to DataAugmentation.jl
+Extension package for DataAugmentation.jl
 
 Crop augmentation extensions:
 * ClassCentricCrop
@@ -12,3 +12,4 @@ Crop augmentation extensions:
 
 Utility functions:
 * apply_data_augmentation()
+* apply_img_augmentation()
