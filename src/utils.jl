@@ -4,7 +4,7 @@ end
 
 
 function unwrap_pair(img_wrap, mask_wrap; classnrs)
-      img  = OffsetArrays.no_offset_view(img_wrap.data) .|> RGB{N0f8}
+      img  = OffsetArrays.no_offset_view(img_wrap.data) # .|> RGB{N0f8}
       mask = OffsetArrays.no_offset_view((mask_wrap.data .- 1) .|> Int16)
       mask = map(v -> v in classnrs ? Int16(v) : Int16(255), mask)
       return img, mask
