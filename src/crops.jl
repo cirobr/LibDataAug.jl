@@ -1,12 +1,14 @@
 """
 Customized projective crops.
 
-The caller supplies an image and a class-id matrix.
-
+The crops accept either a lone `Image` or an `(Image, MaskMulti)` pair.
 The window is `Crop(sz, FromRandom())`. Its `randstate` is a fractional
-offset, shared by the photo (`Image`) and the mask (`MaskMulti`). The mask is
-not wrapped as `Image`: a projective warp of an `Image` interpolates and mixes
-class ids. `MaskMulti` is warped with nearest neighbor.
+offset. When a mask is present it is shared by both items. The mask is
+not wrapped as `Image`: a projective warp of an `Image` interpolates and
+mixes class ids. `MaskMulti` is warped with nearest neighbor.
+
+`ClassCentricCrop` on a lone image falls back to a uniform offset
+(there is no label matrix to center on).
 """
 
 const IGNORE = 0xff
@@ -68,7 +70,6 @@ end
 class_center_state(labels, crop::Integer; kwargs...) = class_center_state(labels, (crop, crop); kwargs...)
 
 
-
 struct ClassCentricCrop <: Transform
     sides::Vector{Int}
     crop::NTuple{2,Int}
@@ -85,7 +86,7 @@ end
     ClassCentricCrop(; short_sides=320:500, crop=256)
 
 Scale, then a class-center `Crop`. The mask item already holds class ids.
-No foreground falls back to a uniform offset.
+No foreground (or a lone image) falls back to a uniform offset.
 """
 function ClassCentricCrop(;
         short_sides = 320:500,
@@ -110,13 +111,15 @@ function RandomCentricCrop(; short_sides = 320:500, crop::Integer = 256)
     return RandomCentricCrop(collect(Int, short_sides), (Int(crop), Int(crop)))
 end
 
-function _scaled(items, sides)
+# --- pair path -----------------------------------------------------------
+
+function _scaled(items::Tuple, sides)
     side = sides[rand(1:length(sides))]
     scale = ScaleKeepAspect((side, side))
     return apply(scale, items[1]), apply(scale, items[2])
 end
 
-function _crop(items, crop, offsets)
+function _crop(items::Tuple, crop, offsets)
     window = Crop(crop, DataAugmentation.FromRandom())
     cropped = (
         apply(window, items[1]; randstate = offsets),
@@ -136,8 +139,27 @@ function apply(tfm::RandomCentricCrop, items::Tuple{Image,MaskMulti}; randstate 
     return _crop(_scaled(items, tfm.sides), tfm.crop, (rand(), rand()))
 end
 
-function apply(tfm::Union{ClassCentricCrop,RandomCentricCrop}, item::Item; randstate = nothing)
-    error("apply the crop to an (Image, MaskMulti) pair")
+# --- image-only path -----------------------------------------------------
+
+function _scaled(item::Image, sides)
+    side = sides[rand(1:length(sides))]
+    scale = ScaleKeepAspect((side, side))
+    return apply(scale, item)
+end
+
+function _crop(item::Image, crop, offsets)
+    window = Crop(crop, DataAugmentation.FromRandom())
+    cropped = apply(window, item; randstate = offsets)
+    return apply(PinOrigin(), cropped)
+end
+
+function apply(tfm::ClassCentricCrop, item::Image; randstate = nothing)
+    # no labels: same geometry as a random crop
+    return _crop(_scaled(item, tfm.sides), tfm.crop, (rand(), rand()))
+end
+
+function apply(tfm::RandomCentricCrop, item::Image; randstate = nothing)
+    return _crop(_scaled(item, tfm.sides), tfm.crop, (rand(), rand()))
 end
 
 # Sequence passes the pair to each step. Maybe is an OneOf, and the default
