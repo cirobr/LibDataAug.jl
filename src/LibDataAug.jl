@@ -6,7 +6,7 @@ export ClassCentricCrop, RandomCentricCrop, GaussianNoise
 
 import DataAugmentation
 import DataAugmentation: apply, getrandstate, itemdata,
-    Transform, Image, MaskMulti, Item,
+    Transform, Image, MaskMulti, Item, ArrayItem,
     OneOf, ScaleKeepAspect, Crop, PinOrigin
 import OffsetArrays
 import Colors: Color, RGB, N0f8
