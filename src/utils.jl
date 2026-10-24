@@ -42,7 +42,7 @@ function apply_data_augmentation(
     tgt_wrap = wrap_data(tgt)
     # augmentation
     img_wrap = apply(intensity_tfm, img_wrap)
-    img_wrap, tgt_wrap = apply(geometric_tfm, (img_wrap, tgt_wrap))   # geometric (img, target)
+    img_wrap, tgt_wrap = apply(geometric_tfm, (img_wrap, tgt_wrap))
     # tensor representations
     img_wrap  = apply(image_to_tensor_tfm, img_wrap)
     tgt_wrap  = apply(target_to_tensor_tfm, tgt_wrap)
