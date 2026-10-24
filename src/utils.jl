@@ -34,7 +34,7 @@ function apply_data_augmentation(
     tgt::Union{AbstractArray{Int16}, AbstractArray{<:Color{N0f8}}};
     intensity_tfm,
     geometric_tfm,
-    image_to_tensor_tfm,
+    image_to_tensor_tfm=ImageToTensor(),
     target_to_tensor_tfm,
 )
     # wrap data
