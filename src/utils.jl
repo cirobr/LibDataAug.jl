@@ -35,7 +35,7 @@ function apply_data_augmentation(
     intensity_tfm,
     geometric_tfm,
     # image_to_tensor_tfm=ImageToTensor(),
-    target_to_tensor_tfm,
+    # target_to_tensor_tfm,
 )
     # wrap data
     img_wrap = wrap_data(img)
