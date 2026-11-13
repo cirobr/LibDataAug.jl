@@ -50,10 +50,12 @@ function DataAugmentation.apply(tfm::RandomPerspective, item::Image;
 
     warped = ImageTransformations.warp(img, tform, axes(img))
 
-    # Fresh 1-based array + original element type
-    plain = similar(img, size(warped))
-    copyto!(plain, warped)
-    return Image(_preserve_eltype(img, plain))
+    # Force a brand-new 1-based Matrix
+    plain = Matrix{eltype(img)}(undef, size(warped))
+    for i in axes(plain, 1), j in axes(plain, 2)
+        plain[i, j] = warped[i, j]
+    end
+    return Image(plain)
 end
 
 function DataAugmentation.apply(tfm::RandomPerspective, item::MaskMulti;
@@ -73,13 +75,14 @@ function DataAugmentation.apply(tfm::RandomPerspective, item::MaskMulti;
     Hinv = inv(Hmat) |> SMatrix{3,3,Float64,9}
     tform = HomographyInv(Hinv)
 
-    # Nearest-neighbour warp
     warped = ImageTransformations.warp(mask, tform, axes(mask);
                                        method = ImageTransformations.Constant())
 
-    # Fresh array + integer labels + clamp to valid class range
-    plain = similar(mask, size(warped))
-    copyto!(plain, warped)
+    # Force a brand-new 1-based Matrix of integer labels
+    plain = Matrix{eltype(mask)}(undef, size(warped))
+    for i in axes(plain, 1), j in axes(plain, 2)
+        plain[i, j] = warped[i, j]
+    end
     warped_int = round.(eltype(mask), plain)
 
     cmin, cmax = extrema(item.classes)
