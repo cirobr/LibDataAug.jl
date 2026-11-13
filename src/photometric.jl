@@ -136,3 +136,37 @@ function DataAugmentation.apply(tfm::Posterize, item::Image; randstate = nothing
     end
     return Image(out)
 end
+
+
+"""
+    Solarize(threshold = 0.5)
+
+Invert all pixel values above `threshold` (solarization).
+`threshold` is in [0, 1]. Element type is preserved.
+Use with `Maybe` for stochastic application.
+"""
+struct Solarize <: Transform
+    threshold::Float32
+end
+Solarize(threshold::Real = 0.5f0) = Solarize(Float32(clamp(threshold, 0, 1)))
+
+function DataAugmentation.apply(tfm::Solarize, item::Image; randstate = nothing)
+    img = itemdata(item)
+    thr = tfm.threshold
+
+    out = similar(img)
+    for i in eachindex(img)
+        pix = img[i]
+        if pix isa RGB
+            r = pix.r > thr ? 1f0 - pix.r : pix.r
+            g = pix.g > thr ? 1f0 - pix.g : pix.g
+            b = pix.b > thr ? 1f0 - pix.b : pix.b
+            out[i] = RGB{N0f8}(r, g, b)
+        else
+            # Gray or other single-channel
+            v = pix > thr ? 1f0 - pix : pix
+            out[i] = oftype(pix, v)
+        end
+    end
+    return Image(out)
+end

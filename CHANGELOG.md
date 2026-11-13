@@ -1,5 +1,5 @@
 ### v0.0.3
-* Added Posterize()
+* Added Posterize(), Solarize()
 
 ### v0.0.2
 * Updated docs, consistency and cleanup.
