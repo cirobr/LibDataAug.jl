@@ -15,6 +15,7 @@ Intensity augmentations:
 * AdjustSaturation
 * AdjustHue
 * Grayscale
+* Posterize
 * GaussianBlur
 
 Utility functions:
