@@ -1,5 +1,6 @@
 module LibDataAug
 
+
 export ClassCentricCrop, RandomCentricCrop, GaussianNoise
 export AdjustSaturation, AdjustHue, Grayscale, GaussianBlur
 export RandomPerspective
@@ -18,9 +19,11 @@ import LinearAlgebra
 
 include("helpers.jl")
 include("utils.jl")
+
 include("crops.jl")
 include("noise.jl")
 include("photometric.jl")
 include("perspective.jl")
 
-end
+
+end # module
