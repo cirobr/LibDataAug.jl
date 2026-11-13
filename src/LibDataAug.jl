@@ -15,7 +15,7 @@ import ImageFiltering
 import ImageTransformations
 import CoordinateTransformations
 import StaticArrays: SMatrix, SVector
-import LinearAlgebra
+import LinearAlgebra: svd
 
 include("helpers.jl")
 include("utils.jl")
