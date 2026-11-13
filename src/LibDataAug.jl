@@ -11,6 +11,7 @@ import DataAugmentation: apply, getrandstate, itemdata,
     OneOf, ScaleKeepAspect, Crop, PinOrigin
 import OffsetArrays
 import Colors: Color, HSV, Gray, RGB, N0f8
+import ImageCore: clamp01
 import ImageFiltering
 import ImageTransformations
 import CoordinateTransformations
