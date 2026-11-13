@@ -99,3 +99,40 @@ function DataAugmentation.apply(tfm::GaussianBlur, item::Image;
     blurred = ImageFiltering.imfilter(img, ImageFiltering.Kernel.gaussian(σ))
     return Image(_preserve_eltype(img, blurred))
 end
+
+
+
+
+
+"""
+    Posterize(bits = 6)
+
+Reduce the number of bits per color channel.
+`bits` ∈ 1:8. Element type is preserved.
+"""
+struct Posterize <: Transform
+    bits::Int
+end
+Posterize(bits::Integer = 6) = Posterize(clamp(Int(bits), 1, 8))
+
+function DataAugmentation.apply(tfm::Posterize, item::Image; randstate = nothing)
+    img = itemdata(item)
+    shift = 8 - tfm.bits
+    mask = UInt8(0xff << shift)
+
+    out = similar(img)
+    for i in eachindex(img)
+        pix = img[i]
+        if pix isa RGB
+            r = reinterpret(N0f8, reinterpret(UInt8, pix.r) & mask)
+            g = reinterpret(N0f8, reinterpret(UInt8, pix.g) & mask)
+            b = reinterpret(N0f8, reinterpret(UInt8, pix.b) & mask)
+            out[i] = RGB{N0f8}(r, g, b)
+        else
+            # Gray{N0f8} or similar
+            v = reinterpret(eltype(pix), reinterpret(UInt8, pix) & mask)
+            out[i] = v
+        end
+    end
+    return Image(out)
+end
