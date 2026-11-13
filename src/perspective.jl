@@ -50,11 +50,8 @@ function DataAugmentation.apply(tfm::RandomPerspective, item::Image;
 
     warped = ImageTransformations.warp(img, tform, axes(img))
 
-    # Force a brand-new 1-based Matrix
-    plain = Matrix{eltype(img)}(undef, size(warped))
-    for i in axes(plain, 1), j in axes(plain, 2)
-        plain[i, j] = warped[i, j]
-    end
+    # Index with the OffsetArray's own axes → plain Matrix
+    plain = [warped[i, j] for i in axes(warped, 1), j in axes(warped, 2)]
     return Image(plain)
 end
 
@@ -78,11 +75,8 @@ function DataAugmentation.apply(tfm::RandomPerspective, item::MaskMulti;
     warped = ImageTransformations.warp(mask, tform, axes(mask);
                                        method = ImageTransformations.Constant())
 
-    # Force a brand-new 1-based Matrix of integer labels
-    plain = Matrix{eltype(mask)}(undef, size(warped))
-    for i in axes(plain, 1), j in axes(plain, 2)
-        plain[i, j] = warped[i, j]
-    end
+    # Index with the OffsetArray's own axes → plain Matrix
+    plain = [warped[i, j] for i in axes(warped, 1), j in axes(warped, 2)]
     warped_int = round.(eltype(mask), plain)
 
     cmin, cmax = extrema(item.classes)
