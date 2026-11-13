@@ -50,8 +50,8 @@ function DataAugmentation.apply(tfm::RandomPerspective, item::Image;
 
     warped = ImageTransformations.warp(img, tform, axes(img))
 
-    # Index with the OffsetArray's own axes → plain Matrix
-    plain = [warped[i, j] for i in axes(warped, 1), j in axes(warped, 2)]
+    # Strip offsets completely
+    plain = collect(OffsetArrays.no_offset_view(warped))
     return Image(plain)
 end
 
@@ -75,8 +75,7 @@ function DataAugmentation.apply(tfm::RandomPerspective, item::MaskMulti;
     warped = ImageTransformations.warp(mask, tform, axes(mask);
                                        method = ImageTransformations.Constant())
 
-    # Index with the OffsetArray's own axes → plain Matrix
-    plain = [warped[i, j] for i in axes(warped, 1), j in axes(warped, 2)]
+    plain = collect(OffsetArrays.no_offset_view(warped))
     warped_int = round.(eltype(mask), plain)
 
     cmin, cmax = extrema(item.classes)
