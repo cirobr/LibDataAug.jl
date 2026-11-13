@@ -6,9 +6,16 @@
 
 Extension package for DataAugmentation.jl
 
-Crop augmentation extensions:
+Geometric augmentations:
 * ClassCentricCrop
 * RandomCentricCrop
+* RandomPerspective
+
+Intensity augmentations:
+* AdjustSaturation
+* AdjustHue
+* Grayscale
+* GaussianBlur
 
 Utility functions:
 * apply_data_augmentation()
