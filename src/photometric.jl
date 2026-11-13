@@ -76,35 +76,6 @@ end
 
 
 """
-    GaussianBlur(σ = (0.1, 2.0))
-
-Apply a Gaussian blur with σ sampled from the given interval.
-Requires `ImageFiltering`.
-Element type is preserved.
-"""
-struct GaussianBlur <: Transform
-    σmin::Float32
-    σmax::Float32
-end
-GaussianBlur(σ::NTuple{2,Real} = (0.1f0, 2.0f0)) =
-    GaussianBlur(Float32(σ[1]), Float32(σ[2]))
-
-DataAugmentation.getrandstate(tfm::GaussianBlur) =
-    tfm.σmin + rand(Float32) * (tfm.σmax - tfm.σmin)
-
-function DataAugmentation.apply(tfm::GaussianBlur, item::Image;
-                                randstate = DataAugmentation.getrandstate(tfm))
-    img = itemdata(item)
-    σ = randstate
-    blurred = ImageFiltering.imfilter(img, ImageFiltering.Kernel.gaussian(σ))
-    return Image(_preserve_eltype(img, blurred))
-end
-
-
-
-
-
-"""
     Posterize(bits = 6)
 
 Reduce the number of bits per color channel.
@@ -202,4 +173,30 @@ function DataAugmentation.apply(tfm::AdjustSharpness, item::Image; randstate = n
     # Clamp to valid range and restore element type
     sharpened = clamp01.(sharpened)
     return Image(_preserve_eltype(img, sharpened))
+end
+
+
+"""
+    GaussianBlur(σ = (0.1, 2.0))
+
+Apply a Gaussian blur with σ sampled from the given interval.
+Requires `ImageFiltering`.
+Element type is preserved.
+"""
+struct GaussianBlur <: Transform
+    σmin::Float32
+    σmax::Float32
+end
+GaussianBlur(σ::NTuple{2,Real} = (0.1f0, 2.0f0)) =
+    GaussianBlur(Float32(σ[1]), Float32(σ[2]))
+
+DataAugmentation.getrandstate(tfm::GaussianBlur) =
+    tfm.σmin + rand(Float32) * (tfm.σmax - tfm.σmin)
+
+function DataAugmentation.apply(tfm::GaussianBlur, item::Image;
+                                randstate = DataAugmentation.getrandstate(tfm))
+    img = itemdata(item)
+    σ = randstate
+    blurred = ImageFiltering.imfilter(img, ImageFiltering.Kernel.gaussian(σ))
+    return Image(_preserve_eltype(img, blurred))
 end
