@@ -1,5 +1,5 @@
 ### v0.0.3
-* Added Posterize(), Solarize()
+* Added Posterize(), Solarize(), AdjustSharpness()
 
 ### v0.0.2
 * Updated docs, consistency and cleanup.

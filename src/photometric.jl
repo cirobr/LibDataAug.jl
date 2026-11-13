@@ -170,3 +170,36 @@ function DataAugmentation.apply(tfm::Solarize, item::Image; randstate = nothing)
     end
     return Image(out)
 end
+
+
+"""
+    AdjustSharpness(factor = 2.0)
+
+Adjust image sharpness.
+`factor = 1` leaves the image unchanged,
+`factor > 1` sharpens,
+`factor < 1` blurs.
+Element type is preserved.
+Requires `ImageFiltering`.
+Use with `Maybe` for stochastic application.
+"""
+struct AdjustSharpness <: Transform
+    factor::Float32
+end
+AdjustSharpness(factor::Real = 2.0f0) = AdjustSharpness(Float32(factor))
+
+function DataAugmentation.apply(tfm::AdjustSharpness, item::Image; randstate = nothing)
+    img = itemdata(item)
+    factor = tfm.factor
+
+    # Mild blur used as the "unsharp" base
+    blurred = ImageFiltering.imfilter(img, ImageFiltering.Kernel.gaussian(1.0))
+
+    # Unsharp mask: sharpened = img + factor * (img - blurred)
+    # Equivalent to: (1 + factor) * img - factor * blurred
+    sharpened = (1f0 + factor) .* img .- factor .* blurred
+
+    # Clamp to valid range and restore element type
+    sharpened = clamp01.(sharpened)
+    return Image(_preserve_eltype(img, sharpened))
+end

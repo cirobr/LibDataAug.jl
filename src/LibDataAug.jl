@@ -2,7 +2,7 @@ module LibDataAug
 
 
 export ClassCentricCrop, RandomCentricCrop, GaussianNoise
-export AdjustSaturation, AdjustHue, Grayscale, Posterize, GaussianBlur
+export AdjustSaturation, AdjustHue, Grayscale, Posterize, Solarize, AdjustSharpness, GaussianBlur
 export RandomPerspective
 
 import DataAugmentation
