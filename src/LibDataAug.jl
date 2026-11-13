@@ -1,8 +1,8 @@
 module LibDataAug
 
-
-# libraries
 export ClassCentricCrop, RandomCentricCrop, GaussianNoise
+export AdjustSaturation, AdjustHue, Grayscale, GaussianBlur
+export RandomPerspective
 
 import DataAugmentation
 import DataAugmentation: apply, getrandstate, itemdata,
@@ -18,11 +18,9 @@ import LinearAlgebra
 
 include("helpers.jl")
 include("utils.jl")
-
 include("crops.jl")
 include("noise.jl")
 include("photometric.jl")
 include("perspective.jl")
-
 
 end

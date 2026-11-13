@@ -1,14 +1,14 @@
 """
-Customized projective crops.
+Customized projective crops for DataAugmentation.jl.
 
 The crops accept either a lone `Image` or an `(Image, MaskMulti)` pair.
 The window is `Crop(sz, FromRandom())`. Its `randstate` is a fractional
-offset. When a mask is present it is shared by both items. The mask is
-not wrapped as `Image`: a projective warp of an `Image` interpolates and
-mixes class ids. `MaskMulti` is warped with nearest neighbor.
+offset. When a mask is present it is shared by both items.
 
-`ClassCentricCrop` on a lone image falls back to a uniform offset
-(there is no label matrix to center on).
+Masks are never warped as `Image` (which would interpolate class ids).
+`MaskMulti` is warped with nearest neighbor.
+
+`ClassCentricCrop` on a lone image falls back to a uniform offset.
 """
 
 const IGNORE = 0xff
